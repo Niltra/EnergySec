@@ -42,15 +42,22 @@ Monitorizamos el corazón del sistema en vivo usando **Spring Boot Actuator** en
 
 ## 🚀 Guía Rápida de Inicio (Plug & Play)
 
-Todo el ecosistema está orquestado mediante contenedores. No necesitas instalaciones ni configuraciones complejas en tu máquina, solo Docker.
+Para que cualquier persona pueda clonar y arrancar el ecosistema en 1 minuto sin configurar variables de entorno, hemos preparado unos scripts de auto-arranque que generan secretos locales de un solo uso y levantan los contenedores. Solo necesitas tener Docker instalado.
 
-```bash
-# 1. Construir las imágenes y levantar toda la infraestructura (Java, Python, Postgres, Prometheus, Grafana)
-docker-compose up -d --build
-
-# 2. Revisar los logs y confirmar que los 5 contenedores están sanos
-docker-compose ps
+### En Windows 🪟
+Simplemente haz **doble clic** en el archivo `start.bat` o ejecútalo en tu terminal:
+```cmd
+start.bat
 ```
+
+### En Linux / Mac 🍎🐧
+Ejecuta el script de bash:
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+El script se encargará de crear la carpeta `secrets/` localmente y levantar la base de datos, el backend Java, el motor Python y el panel Grafana.
 
 ### 📍 Puntos de Acceso Directo
 
@@ -89,15 +96,22 @@ We monitor the system's heartbeat live using **Spring Boot Actuator** combined w
 
 ## 🚀 Quick Start (Plug & Play)
 
-The entire ecosystem is containerized and orchestrated. No complex setups needed, just Docker.
+To make it incredibly easy for anyone to clone and spin up the ecosystem in 1 minute without setting up complex environment variables, we've provided auto-start scripts that generate local dummy secrets and orchestrate the containers. You only need Docker installed.
 
-```bash
-# 1. Spin up the entire infrastructure (Java, Python, Postgres, Prometheus, Grafana)
-docker-compose up -d --build
-
-# 2. Check the logs and verify all 5 containers are healthy
-docker-compose ps
+### On Windows 🪟
+Simply **double-click** the `start.bat` file or run it in your terminal:
+```cmd
+start.bat
 ```
+
+### On Linux / Mac 🍎🐧
+Run the bash script:
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+The script will automatically handle the local `secrets/` creation and spin up the Database, Java Backend, Python Engine, and Grafana dashboard.
 
 ### 📍 Access Points
 
