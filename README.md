@@ -42,22 +42,35 @@ Monitorizamos el corazón del sistema en vivo usando **Spring Boot Actuator** en
 
 ## 🚀 Guía Rápida de Inicio (Plug & Play)
 
-Para que cualquier persona pueda clonar y arrancar el ecosistema en 1 minuto sin configurar variables de entorno, hemos preparado unos scripts de auto-arranque que generan secretos locales de un solo uso y levantan los contenedores. Solo necesitas tener Docker instalado.
+Para que cualquier persona pueda clonar y arrancar el ecosistema en 1 minuto sin configurar variables de entorno, hemos preparado unos scripts de auto-arranque que generan secretos locales de un solo uso y levantan los contenedores automáticamente. 
 
-### En Windows 🪟
-Simplemente haz **doble clic** en el archivo `start.bat` o ejecútalo en tu terminal:
+### 0️⃣ Pre-requisitos
+- Tener instalado **[Git](https://git-scm.com/)**.
+- Tener instalado y en ejecución **[Docker Desktop](https://www.docker.com/products/docker-desktop/)**.
+
+### 1️⃣ Clonar el Repositorio
+Abre tu terminal y ejecuta:
+```bash
+git clone https://github.com/Niltra/EnergySec.git
+cd EnergySec
+```
+
+### 2️⃣ Arrancar la Plataforma
+
+**En Windows 🪟:**
+Simplemente haz **doble clic** en el archivo `start.bat` que está dentro de la carpeta clonada, o ejecútalo en tu terminal:
 ```cmd
 start.bat
 ```
 
-### En Linux / Mac 🍎🐧
-Ejecuta el script de bash:
+**En Linux / Mac 🍎🐧:**
+Ejecuta el script de bash desde la terminal:
 ```bash
 chmod +x start.sh
 ./start.sh
 ```
 
-El script se encargará de crear la carpeta `secrets/` localmente y levantar la base de datos, el backend Java, el motor Python y el panel Grafana.
+El script se encargará de crear la carpeta `secrets/` localmente, rellenarla con credenciales seguras de un solo uso, y levantar la base de datos PostgreSQL, el backend Java, el motor Python y el panel Grafana.
 
 ### 📍 Puntos de Acceso Directo
 
@@ -96,22 +109,35 @@ We monitor the system's heartbeat live using **Spring Boot Actuator** combined w
 
 ## 🚀 Quick Start (Plug & Play)
 
-To make it incredibly easy for anyone to clone and spin up the ecosystem in 1 minute without setting up complex environment variables, we've provided auto-start scripts that generate local dummy secrets and orchestrate the containers. You only need Docker installed.
+To make it incredibly easy for anyone to clone and spin up the ecosystem in 1 minute without setting up complex environment variables, we've provided auto-start scripts that generate local dummy secrets and orchestrate all containers. 
 
-### On Windows 🪟
-Simply **double-click** the `start.bat` file or run it in your terminal:
+### 0️⃣ Prerequisites
+- **[Git](https://git-scm.com/)** installed.
+- **[Docker Desktop](https://www.docker.com/products/docker-desktop/)** installed and running.
+
+### 1️⃣ Clone the Repository
+Open your terminal and run:
+```bash
+git clone https://github.com/Niltra/EnergySec.git
+cd EnergySec
+```
+
+### 2️⃣ Start the Platform
+
+**On Windows 🪟:**
+Simply **double-click** the `start.bat` file located inside the folder, or run it in your terminal:
 ```cmd
 start.bat
 ```
 
-### On Linux / Mac 🍎🐧
-Run the bash script:
+**On Linux / Mac 🍎🐧:**
+Run the bash script from your terminal:
 ```bash
 chmod +x start.sh
 ./start.sh
 ```
 
-The script will automatically handle the local `secrets/` creation and spin up the Database, Java Backend, Python Engine, and Grafana dashboard.
+The script will automatically handle the local `secrets/` folder creation, fill it with secure dummy credentials, and spin up the PostgreSQL Database, Java Backend, Python Engine, and Grafana dashboard.
 
 ### 📍 Access Points
 
