@@ -1,0 +1,70 @@
+spring:
+  application:
+    name: energy-sec-gateway
+  datasource:
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/energysec}
+    username: ${POSTGRES_USER:admin}
+    password: ${POSTGRES_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 10
+      idle-timeout: 30000
+      connection-timeout: 20000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc.batch_size: 100
+        order_inserts: true
+        order_updates: true
+  threads:
+    virtual:
+      enabled: true
+
+# Circuit Breaker settings for ML engine calls
+resilience4j.circuitbreaker:
+  instances:
+    mlEngine:
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 3
+      slidingWindowType: COUNT_BASED
+      minimumNumberOfCalls: 5
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 50
+
+# Observability (Actuator & Prometheus)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,info,metrics
+  endpoint:
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    # Habilitar métricas de la BBDD (HikariCP y Hibernate)
+    enable:
+      hikaricp: true
+      hibernate: true
+
+# OpenAPI / Swagger
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+# App specific settings
+app:
+  ml-engine:
+    url: ${ML_ENGINE_URL:http://localhost:8000}
+    api-key: ${ML_ENGINE_API_KEY:default_key_for_local_dev}
+  jwt:
+    private-key-path: ${JWT_PRIVATE_KEY_FILE:classpath:dummy.key}
+    public-key-path: ${JWT_PUBLIC_KEY_FILE:classpath:dummy.pub}

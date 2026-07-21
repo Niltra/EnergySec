@@ -1,0 +1,38 @@
+# Compiled class file
+*.class
+target/
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs
+hs_err_pid*
+replay_pid*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+venv/
+env/
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.eclipse/
+
+# Secrets (IMPORTANT: Prevent credential leaks)
+secrets/*
+!secrets/*.example
+.env
+
+# Database volumes
+pgdata/

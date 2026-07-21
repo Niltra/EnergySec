@@ -1,0 +1,115 @@
+{
+	"info": {
+		"_postman_id": "c1f7a8b3-4f9e-4a6c-9b1d-2d4e7f8b5a0c",
+		"name": "EnergySec OSINT Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Ingestar Nueva Métrica (ESIOS)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"assetId\": \"SUBSTATION-MAD\",\n    \"readings\": [30000.5, 29800.2, 30500.1]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/metrics/ingest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"metrics",
+						"ingest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. Ingestar Incidente DGT (Haversine Geo-Riesgo)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"incidentId\": \"DGT-CRITICAL-001\",\n    \"type\": \"FIRE\",\n    \"location\": {\n        \"latitude\": 40.4180,\n        \"longitude\": -3.7000\n    },\n    \"timestamp\": \"2026-07-21T10:00:00Z\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/osint/dgt/incident",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"osint",
+						"dgt",
+						"incident"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. Obtener Subvenciones BDNS (Test de Enmascaramiento)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/osint/subsidies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"osint",
+						"subsidies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. Obtener Certificados (Test de Enmascaramiento)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/osint/certificates",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"osint",
+						"certificates"
+					]
+				}
+			}
+		}
+	]
+}

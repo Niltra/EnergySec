@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EnergySec - Enterprise Dashboard</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --panel-bg: #111827;
+            --text-color: #e5e7eb;
+            --accent: #10b981;
+            --accent-hover: #059669;
+            --admin-color: #ef4444;
+            --user-color: #3b82f6;
+            --border-color: #1f2937;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar UI */
+        .sidebar {
+            width: 380px;
+            background-color: var(--panel-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .status-box {
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--accent);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .status-box h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+            color: var(--accent);
+        }
+
+        .role-indicator {
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-admin {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+        }
+
+        .btn-admin:hover {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+        }
+
+        .btn-user {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .btn-user:hover {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Map Area */
+        #map {
+            flex-grow: 1;
+            height: 100%;
+            background-color: #0b0f19;
+        }
+
+        /* Leaflet Dark Theme Adjustments */
+        .leaflet-container {
+            background: #0b0f19;
+        }
+        
+        /* Popup Styling */
+        .leaflet-popup-content-wrapper {
+            background-color: var(--panel-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+        }
+        .leaflet-popup-tip {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+        }
+        .popup-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        .popup-critical {
+            color: var(--admin-color);
+        }
+        .popup-masked {
+            color: #9ca3af;
+            font-style: italic;
+        }
+        
+        .blur-effect {
+            filter: blur(4px);
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar UI -->
+    <div class="sidebar">
+        <div class="header">
+            <h1>⚡ EnergySec</h1>
+            <p>Intelligence Platform & Geo-Risk Monitoring (v1.0-Enterprise)</p>
+        </div>
+
+        <div class="status-box">
+            <h3>Estado de Conexión</h3>
+            <p>JWT Role Activo: <span id="currentRole" class="role-indicator" style="color: #9ca3af;">NINGUNO</span></p>
+            <p style="font-size: 0.8rem; color: #6b7280; margin-top: 10px;">El AOP (Aspect-Oriented Programming) interceptará los datos enviados al frontend basándose en este rol.</p>
+        </div>
+
+        <button class="btn btn-admin" onclick="simulateLogin('ADMIN')">Simular Login ADMIN (Auditor)</button>
+        <button class="btn btn-user" onclick="simulateLogin('USER')">Simular Login USER (Básico)</button>
+        
+        <div style="margin-top: auto; font-size: 0.75rem; color: #4b5563; text-align: center;">
+            Demostración Tecnológica - Data Masking<br>
+            © 2026 EnergySec Architecture
+        </div>
+    </div>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // Inicializar el mapa centrado en España (Modo Oscuro)
+        const map = L.map('map', {
+            zoomControl: false
+        }).setView([40.4168, -3.7038], 6);
+
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+        // Tile layer oscuro (CartoDB Dark Matter)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Grupo de marcadores para poder limpiarlos al cambiar de rol
+        let markerGroup = L.layerGroup().addTo(map);
+
+        // Base de datos de prueba (Simulando la BBDD + Motor Geoespacial)
+        const incidents = [
+            {
+                id: "SUB-MAD-01",
+                type: "Subestación Crítica",
+                exactCoords: [40.4530, -3.6883], // Madrid
+                obfuscatedCoords: [40.5000, -3.6000], // Zona difusa
+                cif: "A87654321",
+                investment: "1.250.000 €",
+                risk: "ALERTA DGT: Accidente Químico a 1.2km"
+            },
+            {
+                id: "PLANT-VAL-09",
+                type: "Planta Solar",
+                exactCoords: [39.4699, -0.3774], // Valencia
+                obfuscatedCoords: [39.5000, -0.2000], // Zona difusa
+                cif: "B12345678",
+                investment: "850.000 €",
+                risk: "ANOMALÍA ML: Caída de tensión del 45%"
+            }
+        ];
+
+        // Función principal que simula la respuesta del Backend según el Rol
+        function simulateLogin(role) {
+            // Actualizar UI
+            const roleEl = document.getElementById('currentRole');
+            roleEl.innerText = role;
+            roleEl.style.color = role === 'ADMIN' ? 'var(--admin-color)' : 'var(--user-color)';
+            
+            // Limpiar mapa
+            markerGroup.clearLayers();
+            
+            // Repoblar mapa simulando el filtro AOP de Spring Boot
+            incidents.forEach(incident => {
+                let coords, popupContent, iconColor;
+
+                if (role === 'ADMIN') {
+                    // Vista sin censura (Acceso Total)
+                    coords = incident.exactCoords;
+                    popupContent = `
+                        <div class="popup-title popup-critical">🛡️ VISIBILIDAD TOTAL</div>
+                        <p><strong>Activo:</strong> ${incident.id} (${incident.type})</p>
+                        <p><strong>CIF/NIF:</strong> ${incident.cif}</p>
+                        <p><strong>Inversión (BDNS):</strong> <span style="color:#10b981; font-weight:bold;">${incident.investment}</span></p>
+                        <p><strong>Coordenadas Exactas:</strong> ${coords[0]}, ${coords[1]}</p>
+                        <p style="color:#ef4444; font-weight:600;">⚠️ ${incident.risk}</p>
+                    `;
+                } else {
+                    // Vista censurada por el DataMaskingAspect (AOP)
+                    coords = incident.obfuscatedCoords;
+                    
+                    // Lógica de ofuscación de strings
+                    const maskedCif = incident.cif.substring(0,2) + "*******";
+                    
+                    popupContent = `
+                        <div class="popup-title">👁️ VISTA OFUSCADA</div>
+                        <p><strong>Activo:</strong> ${incident.id} <span class="popup-masked">(Zona Genérica)</span></p>
+                        <p><strong>CIF/NIF:</strong> ${maskedCif}</p>
+                        <p><strong>Inversión (BDNS):</strong> <span class="popup-masked">[CONFIDENCIAL]</span></p>
+                        <p><strong>Coordenadas:</strong> <span class="blur-effect">Geo-Censurado</span></p>
+                        <p style="color:#f59e0b; font-weight:600;">⚠️ Evento de Seguridad Detectado</p>
+                    `;
+                }
+
+                // Crear y añadir marcador
+                const marker = L.circleMarker(coords, {
+                    radius: role === 'ADMIN' ? 8 : 20, // Si es user hacemos un área grande difusa
+                    fillColor: role === 'ADMIN' ? '#ef4444' : '#3b82f6',
+                    color: '#fff',
+                    weight: 2,
+                    opacity: role === 'ADMIN' ? 1 : 0.4,
+                    fillOpacity: role === 'ADMIN' ? 0.8 : 0.2
+                });
+
+                marker.bindPopup(popupContent);
+                markerGroup.addLayer(marker);
+            });
+            
+            // Re-centrar con animación suave
+            map.flyTo([40.4168, -3.7038], 6, {
+                animate: true,
+                duration: 1.5
+            });
+        }
+    </script>
+</body>
+</html>

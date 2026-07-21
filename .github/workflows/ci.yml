@@ -1,0 +1,64 @@
+name: EnergySec CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-and-build:
+    name: Build, Test & Validate Infrastructure
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the repository code
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Set up Python 3.11 environment for ML Engine
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip' # Caches dependencies to speed up future runs
+
+      # 3. Install Python dependencies and run PyTest (Isolation Forest & Security Validations)
+      - name: 🧪 Install ML Engine Dependencies & Run Pytest
+        run: |
+          cd ml-engine
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pytest tests/ --disable-warnings
+        env:
+          # Inyectamos variables de entorno dummy necesarias para que los tests corran limpios
+          ML_ENGINE_API_KEY: "test-key"
+
+      # 4. Set up Java 21 (Temurin) with Virtual Threads support for the Backend Core
+      - name: ☕ Set up JDK 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven # Optimiza los tiempos de build mediante caché de Maven
+
+      # 5. Run Spring Boot Tests (AOP, Rate Limiting, HA Virtual Threads & OSINT validation)
+      - name: 🛡️ Run Spring Boot Integration Tests
+        run: |
+          cd backend-core
+          mvn clean test -B
+        env:
+          # Simulación del JWT Secret para que el contexto Spring cargue exitosamente
+          JWT_SECRET: "dummy-secret-for-ci-environment"
+
+      # 6. Validate Docker Compose Build Infrastructure
+      # Este paso demuestra a los Tech Leads que la infraestructura de contenedores 
+      # está libre de errores de sintaxis o dependencias rotas y está lista para producción.
+      - name: 🐳 Validate Docker Compose Build
+        run: |
+          docker-compose build
+        env:
+          # Mock variables required by the docker-compose file during build phase
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: ci_password
+          POSTGRES_DB: energysec
