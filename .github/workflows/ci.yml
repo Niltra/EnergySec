@@ -51,7 +51,17 @@ jobs:
           # Simulación del JWT Secret para que el contexto Spring cargue exitosamente
           JWT_SECRET: "dummy-secret-for-ci-environment"
 
-      # 6. Validate Docker Compose Build Infrastructure
+      # 6. Prepare dummy secrets for Docker Compose validation
+      - name: 🔐 Prepare Dummy Secrets
+        run: |
+          mkdir -p secrets
+          cp secrets/db_user.txt.example secrets/db_user.txt || echo "admin" > secrets/db_user.txt
+          cp secrets/db_password.txt.example secrets/db_password.txt || echo "pass" > secrets/db_password.txt
+          cp secrets/ml_api_key.txt.example secrets/ml_api_key.txt || echo "key" > secrets/ml_api_key.txt
+          cp secrets/jwt_private_key.pem.example secrets/jwt_private_key.pem || echo "priv" > secrets/jwt_private_key.pem
+          cp secrets/jwt_public_key.pem.example secrets/jwt_public_key.pem || echo "pub" > secrets/jwt_public_key.pem
+
+      # 7. Validate Docker Compose Build Infrastructure
       # Este paso demuestra a los Tech Leads que la infraestructura de contenedores 
       # está libre de errores de sintaxis o dependencias rotas y está lista para producción.
       - name: 🐳 Validate Docker Compose Build
