@@ -45,6 +45,12 @@ management:
     prometheus:
       enabled: true
   metrics:
+    web:
+      server:
+        request:
+          autotime:
+            enabled: true
+          ignore-trailing-slash: true
     export:
       prometheus:
         enabled: true

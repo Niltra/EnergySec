@@ -16,6 +16,8 @@ services:
       - ML_ENGINE_API_KEY_FILE=/run/secrets/ml_api_key
       - JWT_PRIVATE_KEY_FILE=/run/secrets/jwt_private_key
       - JWT_PUBLIC_KEY_FILE=/run/secrets/jwt_public_key
+      - MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://jaeger:9411/api/v2/spans
     depends_on:
       postgres:
         condition: service_healthy
@@ -113,8 +115,41 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - prometheus
+      - loki
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "9411:9411"
+    networks:
+      - api-gateway-net
+
+  loki:
+    image: grafana/loki:2.9.2
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - api-gateway-net
+
+  promtail:
+    image: grafana/promtail:2.9.2
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./grafana/provisioning/promtail-config.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - api-gateway-net
+    depends_on:
+      - loki
 
 networks:
   api-gateway-net:

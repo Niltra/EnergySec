@@ -15,6 +15,18 @@
 
 ---
 
+## 🎥 Demostración en Vivo / Live Demo
+<div align="center">
+  <video width="100%" controls>
+    <source src="./demostracion_final.mp4" type="video/mp4">
+    Tu navegador no soporta el formato de video.
+  </video>
+</div>
+
+---
+
+---
+
 # 🇪🇸 VERSIÓN EN ESPAÑOL
 
 ## 🌍 El Problema a Resolver (Pitch Comercial)
