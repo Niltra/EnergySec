@@ -16,12 +16,8 @@
 ---
 
 ## 🎥 Demostración en Vivo / Live Demo
-<div align="center">
-  <video width="100%" controls>
-    <source src="./demostracion_final.mp4" type="video/mp4">
-    Tu navegador no soporta el formato de video.
-  </video>
-</div>
+
+https://github.com/Niltra/EnergySec/raw/main/demostracion_final.mp4
 
 ---
 
