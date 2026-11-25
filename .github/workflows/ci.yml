@@ -52,6 +52,8 @@ jobs:
         env:
           # Simulación del JWT Secret para que el contexto Spring cargue exitosamente
           JWT_SECRET: "dummy-secret-for-ci-environment"
+          # El Docker del runner exige API 1.40+; docker-java por defecto usa 1.32
+          DOCKER_API_VERSION: "1.43"
 
       # 6. Prepare dummy secrets for Docker Compose validation
       - name: 🔐 Prepare Dummy Secrets
