@@ -23,16 +23,18 @@ jobs:
           python-version: '3.11'
           cache: 'pip' # Caches dependencies to speed up future runs
 
-      # 3. Install Python dependencies and run PyTest (Isolation Forest & Security Validations)
-      - name: 🧪 Install ML Engine Dependencies & Run Pytest
+      # 3. Install Python dependencies
+      - name: 🧪 Install ML Engine Dependencies
         run: |
           cd ml-engine
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pytest tests/ --disable-warnings
-        env:
-          # Inyectamos variables de entorno dummy necesarias para que los tests corran limpios
-          ML_ENGINE_API_KEY: "test-key"
+          python -m pip install -r requirements.txt
+
+      # 3b. Run PyTest (Isolation Forest & Security Validations)
+      - name: ✅ Run ML Engine Tests
+        run: |
+          cd ml-engine
+          python -m pytest tests/ --disable-warnings -q
 
       # 4. Set up Java 21 (Temurin) with Virtual Threads support for the Backend Core
       - name: ☕ Set up JDK 21 (Temurin)
