@@ -20,7 +20,8 @@ api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
 def get_api_key(api_key_header: str = Security(api_key_header)):
     api_key_file = os.getenv("API_KEY_FILE")
     if not api_key_file or not os.path.exists(api_key_file):
-        raise HTTPException(status_code=500, detail="API Key not configured")
+        # 401, no 500: el cliente no está autenticado, el servidor no está roto.
+        raise HTTPException(status_code=401, detail="API key not configured")
         
     with open(api_key_file, 'r') as f:
         expected_key = f.read().strip()

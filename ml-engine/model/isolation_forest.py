@@ -1,16 +1,15 @@
 import numpy as np
 import joblib
-import os
-from sklearn.ensemble import IsolationForest
+from pathlib import Path
 
-MODEL_PATH = "model/trained_model.joblib"
+MODEL_PATH = Path(__file__).resolve().parent / "trained_model.joblib"
 
 # Using joblib instead of pickle for better performance with numpy arrays
 # and avoiding arbitrary code execution if the file is replaced by a malicious pickle
 # In a real scenario, we should also verify the hash of the model before loading it.
 
 def load_model():
-    if not os.path.exists(MODEL_PATH):
+    if not MODEL_PATH.exists():
         raise FileNotFoundError(f"El modelo no existe en {MODEL_PATH}. Por favor, entrena un modelo con datos reales antes de iniciar el motor ML (ej. usando scripts/train_model.py).")
         
     return joblib.load(MODEL_PATH)
