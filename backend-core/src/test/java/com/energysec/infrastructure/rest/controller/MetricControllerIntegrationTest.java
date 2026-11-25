@@ -45,6 +45,8 @@ class MetricControllerIntegrationTest {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
+        // El perfil test usa H2; al apuntar a Postgres hay que cambiar también el driver.
+        registry.add("spring.datasource.driver-class-name", () -> "org.postgresql.Driver");
     }
 
     @Autowired
